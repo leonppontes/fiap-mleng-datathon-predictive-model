@@ -1,0 +1,30 @@
+# Ambientes Virtuais
+venv/
+.env/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Arquivos compilados do Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Pytest e Coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Dados e Modelos (Ignorar arquivos grandes do GitHub)
+data/BASE DE DADOS PEDE 2024 - DATATHON.xlsx
+models/preprocessor.joblib
+models/random_forest_model.joblib
+
+# Pycharm / VSCode
+.idea/
+.vscode/
+
+# Jupyter Notebook e outros
+.ipynb_checkpoints
+*.log
