@@ -137,6 +137,14 @@ Foram codificadas de forma modularizada no diretório `src/`:
 
 3. **Treinamento e Validação (`train.py` && `evaluate.py`):**
    Treinamento utiliza modelo Random Forest com `class_weight='balanced'` por conta nativa do banco de dados ser desequilibrado nos 4 rótulos (Há massivamente mais classificação de grupo "Quartzo"). É utilizado RandomForest por capturar fronteiras não lineares sem precisar de otimizações de gradiente robustas ou customizações profundas para obter ótimos scores na modelagem.
+   
+   **Resultados da Avaliação (Evaluation):**
+   O script `evaluate.py` analisa o poder do modelo perante os dados tratados. Ao executar em todo o *Dataset* base (para checagem do *fit* no desafio atual), ele mostra:
+   - **Accuracy**: ~`0.69`
+   - **F1-Score (Weighted)**: ~`0.69`
+   
+   **Por que o F1-Score?**
+   A distribuição das "Pedras" tende a ser desbalanceada. O F1 traz a média harmônica entre a Precisão e o Recall, medindo o quanto o modelo acerta a classe específica (Precision) e garante a captação da grande maioria das instâncias daquela classe (Recall). O algoritmo em Random Forest atende bem, pois garante o aprendizado das relações não lineares sem precisar de extrema arquitetura de hiperparâmetros, diminuindo a chance de Overfitting que modelos menores teriam.
 
 4. **Persistência (`utils.py`):**
    O pré-processamento treinado e as matrizes internas de florestas são salvas para serem acopladas e enviadas à API sem vazar dados entre as partições.
