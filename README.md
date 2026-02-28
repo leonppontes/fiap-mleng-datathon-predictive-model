@@ -50,14 +50,24 @@
 1. Garanta ter o Python 3.12+ em sua máquina.
 2. Instale as dependências:
    `pip install -r requirements.txt`
-3. Treine o modelo para gerar os arquivos passivos em `/models` antes de testar a rede:
+3. Treine o modelo para gerar os arquivos passivos em `/models` antes de testar a base:
    `python src/train.py`
+   *(Nota: O script `train.py` é o orquestrador principal. Ele **automaticamente** aciona os módulos `preprocessing.py` e `feature_engineering.py` para limpar a base de dados original de Excel e codificar as features antes do treinamento).*
+   
 4. Avalie as métricas:
    `python src/evaluate.py`
 5. Rodado a API local:
    `uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload`
 6. Rode os testes rodando a bateria com coverage:
-   `python -m pytest --cov=src --cov=app tests/`
+   Para que o Python saiba a raiz do pacote dos testes, insira o `PYTHONPATH` antes de rodar o comando:
+   No **Windows PowerShell**:
+   ```powershell
+   $env:PYTHONPATH="."; python -m pytest --cov=src --cov=app tests/
+   ```
+   No **Linux/Mac**:
+   ```bash
+   PYTHONPATH="." python -m pytest --cov=src --cov=app tests/
+   ```
 
 ## Ambiente Containerizado (Docker - Recomendado)
 
