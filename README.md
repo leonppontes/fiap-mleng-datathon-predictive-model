@@ -51,11 +51,11 @@
 2. Instale as dependências:
    `pip install -r requirements.txt`
 3. Treine o modelo para gerar os arquivos passivos em `/models` antes de testar a base:
-   `python src/train.py`
+   `python -m src.train`
    *(Nota: O script `train.py` é o orquestrador principal. Ele **automaticamente** aciona os módulos `preprocessing.py` e `feature_engineering.py` para limpar a base de dados original de Excel e codificar as features antes do treinamento).*
    
 4. Avalie as métricas:
-   `python src/evaluate.py`
+   `python -m src.evaluate`
 5. Rodado a API local:
    `uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload`
 6. Rode os testes rodando a bateria com coverage:
@@ -106,13 +106,13 @@ curl -X GET http://localhost:8000/
 curl -X POST "http://localhost:8000/predict" \
      -H "Content-Type: application/json" \
      -d '{
-            "Fase": "Fase 8",
-            "Idade": 21,
-            "Genero": "M",
+            "Fase": "2A",
+            "Idade": 15,
+            "Genero": "Feminino",
             "Ano_ingresso": 2021,
-            "Instituicao_de_ensino": "VAGA MACRO",
-            "Fase_Ideal": "Fase 8",
-            "Defasagem": 0
+            "Instituicao_de_ensino": "Pública",
+            "Fase_Ideal": "Fase 2 (5º e 6º ano)",
+            "Defasagem": -1
          }'
 ```
 **Resposta Esperada:**
@@ -122,6 +122,20 @@ curl -X POST "http://localhost:8000/predict" \
   "versao_modelo": "1.0.0"
 }
 ```
+
+### Dicionário de Inputs (Valores Válidos)
+
+Para garantir o melhor funcionamento do modelo, o JSON enviado na requisição deve conter os valores dentro das categorias que existiam na base original do treinamento. Caso valores desconhecidos sejam enviados para as variáveis textuais, o modelo os ignorará estatisticamente.
+
+| Campo (JSON)            | Tipo      | O que espera / Exemplos Exatos |
+|--------------------------|-----------|--------------------------------|
+| **Fase**                 | String    | Turma atual do aluno. Um dos 60+ valores descritos na base (Ex: `ALFA`, `1A`, `2A`, `3G`, `4L`, `5M`, `7A`, etc). |
+| **Idade**                | Inteiro   | Idade do aluno. (Ex: `15`, `18`, `20`). |
+| **Genero**               | String    | Exatamente: `Masculino` ou `Feminino`. |
+| **Ano_ingresso**         | Inteiro   | Ano de entrada do aluno na organização (Ex: `2019`, `2021`, `2024`). |
+| **Instituicao_de_ensino**| String    | Exatamente um entre: `Pública`, `Privada`, `Privada - Programa de apadrinhamento`, `Privada - Programa de Apadrinhamento`, `Concluiu o 3º EM`, `Privada *Parcerias com Bolsa 100%`, `Desconhecido`. |
+| **Fase_Ideal**           | String    | Exatamente um entre: `ALFA (1º e 2º ano)`, `Fase 1 (3º e 4º ano)`, `Fase 2 (5º e 6º ano)`, `Fase 3 (7º e 8º ano)`, `Fase 4 (9º ano)`, `Fase 5 (1º EM)`, `Fase 6 (2º EM)`, `Fase 7 (3º EM)`. |
+| **Defasagem**            | Inteiro   | Número <= 0 indicando retenção. (Ex: `0`, `-1`, `-2`, `-4`). |
 
 # Etapas do Pipeline de Machine Learning
 
